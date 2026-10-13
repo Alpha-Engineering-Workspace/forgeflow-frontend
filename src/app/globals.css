@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+
+  --ff-bg: #F5F7FC;
+  --ff-surface: #FFFFFF;
+  --ff-surface-soft: #EDF2F9;
+  --ff-sidebar: #0B1220;
+
+  --ff-text: #0F172A;
+  --ff-muted: #52627A;
+  --ff-border: #DDE5F0;
+
+  --ff-primary: #2563EB;
+  --ff-primary-hover: #1D4ED8;
+  --ff-on-primary: #FFFFFF;
+
+  --ff-accent: #06B6D4;
+  --ff-focus: #2563EB;
+
+  --ff-radius-control: 8px;
+  --ff-radius-card: 12px;
+  --ff-radius-panel: 16px;
+
+  --ff-motion-fast: 140ms;
+  --ff-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ff-bg: #0B1220;
+  --ff-surface: #111C30;
+  --ff-surface-soft: #17243A;
+  --ff-sidebar: #080F1B;
+
+  --ff-text: #E6EDF8;
+  --ff-muted: #A6B4CC;
+  --ff-border: #26354D;
+
+  --ff-primary: #60A5FA;
+  --ff-primary-hover: #93C5FD;
+  --ff-on-primary: #0B1220;
+
+  --ff-accent: #22D3EE;
+  --ff-focus: #93C5FD;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--ff-bg);
+  color: var(--ff-text);
+}
+
+button,
+a {
+  transition: background-color var(--ff-motion-fast) var(--ff-ease),
+              border-color var(--ff-motion-fast) var(--ff-ease);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ff-focus);
+  outline-offset: 3px;
+}
+
+.ff-gradient {
+  background: linear-gradient(120deg, #2563EB, #06B6D4);
+}
+
+.ff-dot-grid {
+  background-image: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.12) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
