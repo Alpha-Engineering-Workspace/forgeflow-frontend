@@ -20,7 +20,14 @@ jobs:
       - name: Run frontend container
         run: docker run --detach --name ff-frontend-ci --publish 127.0.0.1:3000:3000 forgeflow-frontend:ci
       - name: Check preview route
-        run: curl --fail --retry 20 --retry-connrefused --retry-delay 2 http://127.0.0.1:3000/preview/connection
+        run: |
+          curl --fail --silent --show-error \
+            --retry 20 \
+            --retry-all-errors \
+            --retry-delay 2 \
+            --connect-timeout 3 \
+            --max-time 5 \
+            http://127.0.0.1:3000/preview/connection
       - name: Check controlled missing-configuration response
         shell: bash
         run: |
