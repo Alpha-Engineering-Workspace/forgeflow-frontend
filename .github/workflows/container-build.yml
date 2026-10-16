@@ -1,0 +1,34 @@
+name: Frontend container build and smoke
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  frontend-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build frontend Docker image
+        run: docker build --tag forgeflow-frontend:ci .
+      - name: Run frontend container
+        run: docker run --detach --name ff-frontend-ci --publish 127.0.0.1:3000:3000 forgeflow-frontend:ci
+      - name: Check preview route
+        run: curl --fail --retry 20 --retry-connrefused --retry-delay 2 http://127.0.0.1:3000/preview/connection
+      - name: Check controlled missing-configuration response
+        shell: bash
+        run: |
+          code=$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3000/api/backend/health)
+          test "$code" = "503"
+      - name: Show logs on failure
+        if: failure()
+        run: docker logs ff-frontend-ci
+      - name: Remove disposable container
+        if: always()
+        run: docker rm --force ff-frontend-ci || true
