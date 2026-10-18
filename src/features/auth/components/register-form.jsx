@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../../components/ui/button.jsx";
@@ -38,7 +39,8 @@ export function RegisterForm() {
     return (
       <div role="status" className="space-y-4">
         <p className="text-base font-semibold">Account created successfully.</p>
-        <p className="text-sm text-[var(--ff-muted)]">You can sign in once the login page is ready.</p>
+        <p className="text-sm text-[var(--ff-muted)]">Check your email for a verification link. It expires after 12 hours.</p>
+        <Link href="/resend-verification" className="inline-block text-sm text-[var(--ff-link,#1D4ED8)] underline">Didn’t get an email? Request a new link</Link>
       </div>
     );
   }

@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "../../../components/ui/button.jsx";
 
 const TOKEN_FORMAT = /^[A-Za-z0-9_-]{30,200}$/;
@@ -47,7 +48,12 @@ export function VerifyEmailForm() {
   }
 
   if (!validLink) {
-    return <p role="alert" className="text-sm text-red-700">Verification link is missing or invalid. Request a new email.</p>;
+    return (
+      <div className="space-y-3">
+        <p role="alert" className="text-sm text-red-700">Verification link is missing or invalid.</p>
+        <Link href="/resend-verification" className="inline-block text-sm text-[var(--ff-link,#1D4ED8)] underline">Request a new verification email</Link>
+      </div>
+    );
   }
 
   return (
@@ -59,6 +65,9 @@ export function VerifyEmailForm() {
         <p role={state === "success" ? "status" : "alert"} className={state === "success" ? "text-sm text-green-700" : "text-sm text-red-700"}>
           {message}
         </p>
+      )}
+      {state === "failed" && (
+        <Link href="/resend-verification" className="inline-block text-sm text-[var(--ff-link,#1D4ED8)] underline">Request a new verification email</Link>
       )}
       {state !== "success" && (
         <Button type="button" onClick={verify} disabled={state === "pending"} className="w-full">
