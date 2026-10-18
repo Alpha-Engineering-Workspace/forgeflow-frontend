@@ -41,6 +41,7 @@ export function RegisterForm() {
         <p className="text-base font-semibold">Account created successfully.</p>
         <p className="text-sm text-[var(--ff-muted)]">Check your email for a verification link. It expires after 12 hours.</p>
         <Link href="/resend-verification" className="inline-block text-sm text-[var(--ff-link,#1D4ED8)] underline">Didn’t get an email? Request a new link</Link>
+        <p className="text-sm"><Link href="/login" className="underline">Already verified? Sign in</Link></p>
       </div>
     );
   }

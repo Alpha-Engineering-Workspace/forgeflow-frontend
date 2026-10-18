@@ -27,7 +27,7 @@ export function VerifyEmailForm() {
       });
       if (response.status === 204) {
         setState("success");
-        setMessage("Your email has been verified. You can sign in when the login page is ready.");
+        setMessage("Your email has been verified. You can now sign in.");
         // Remove the single-use credential from the address bar after success.
         window.history.replaceState(window.history.state, "", "/verify-email");
         return;
@@ -65,6 +65,9 @@ export function VerifyEmailForm() {
         <p role={state === "success" ? "status" : "alert"} className={state === "success" ? "text-sm text-green-700" : "text-sm text-red-700"}>
           {message}
         </p>
+      )}
+      {state === "success" && (
+        <Link href="/login" className="inline-block text-sm text-[var(--ff-link,#1D4ED8)] underline">Go to sign in</Link>
       )}
       {state === "failed" && (
         <Link href="/resend-verification" className="inline-block text-sm text-[var(--ff-link,#1D4ED8)] underline">Request a new verification email</Link>
