@@ -196,3 +196,21 @@ export async function revokeServerSession(sessionId, {
   if (typeof session?.refreshToken !== "string") return { kind: "invalid" };
   return revoke(session.refreshToken);
 }
+
+// Used ONLY by server-side BFF resource handlers. Never serialize to Auth.js
+// session(), a Server Component, or browser JSON.
+export async function getServerAccessToken(sessionId, {
+  client = redisClient, validate = hasServerSession, now = Date.now,
+} = {}) {
+  const key = keyFor(sessionId);
+  if (!key || !(await validate(sessionId))) return null;
+  try {
+    const redis = await client();
+    const current = parseSession(await redis.get(key));
+    if (!current || current.state ||
+        (current.accessExpiresAt !== undefined && current.accessExpiresAt <= now())) return null;
+    return { accessToken: current.accessToken, userId: current.user?.id };
+  } catch {
+    return null;
+  }
+}
