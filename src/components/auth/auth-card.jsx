@@ -1,11 +1,17 @@
 export function AuthCard({ eyebrow, title, description, children }) {
   return (
     <div className="ff-auth-card w-full">
-      <div className="mb-8">
-        <p className="ff-eyebrow mb-4">{eyebrow}</p>
-        <h1 className="text-[clamp(2rem,5vw,2.8rem)] leading-[1.12] font-semibold tracking-[-0.05em] text-[var(--ff-text)]">{title}</h1>
-        <p className="mt-4 max-w-[38ch] text-[15px] leading-7 text-[var(--ff-muted)]">{description}</p>
-      </div>
+      <header className="mb-7">
+        {eyebrow && <p className="ff-eyebrow mb-3">{eyebrow}</p>}
+        <h1 className="text-[clamp(1.75rem,3.6vw,2.1rem)] font-semibold leading-[1.1] tracking-[-0.035em] text-[var(--ff-text-strong)]">
+          {title}
+        </h1>
+        {description && (
+          <p className="mt-3 max-w-[42ch] text-[14.5px] leading-[1.6] text-[var(--ff-muted)]">
+            {description}
+          </p>
+        )}
+      </header>
       {children}
     </div>
   );
