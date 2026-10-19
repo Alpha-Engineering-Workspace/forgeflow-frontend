@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { LoaderCircle, ArrowRight } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../../../components/ui/button.jsx";
-import { Input } from "../../../components/ui/input.jsx";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Field } from "@/components/ui/field";
+import { InlineAlert } from "@/components/ui/inline-alert";
 import { resendVerificationSchema } from "../resend-schema.js";
 
 export function ResendVerificationForm() {
@@ -31,11 +34,9 @@ export function ResendVerificationForm() {
       }
       const body = await response.json().catch(() => null);
       setStatus("error");
-      if (response.status === 429) {
-        setMessage("Too many requests. Please wait before requesting another link.");
-      } else {
-        setMessage(body?.error?.message || "Could not request a new link. Try again.");
-      }
+      setMessage(response.status === 429
+        ? "Too many requests. Please wait before requesting another link."
+        : body?.error?.message || "Could not request a new link. Try again.");
     } catch {
       setStatus("error");
       setMessage("Unable to connect. Please try again.");
@@ -43,30 +44,20 @@ export function ResendVerificationForm() {
   }
 
   if (status === "success") {
-    return <p role="status" className="text-sm text-green-700">{message}</p>;
+    // Generic confirmation: never reveal whether an account exists or is verified.
+    return <InlineAlert tone="success">{message}</InlineAlert>;
   }
 
   return (
-    <form onSubmit={handleSubmit(submit)} noValidate className="space-y-5">
-      <div className="space-y-1.5">
-        <label htmlFor="resend-email" className="block text-sm font-medium">Email address</label>
-        <Input
-          id="resend-email"
-          type="email"
-          autoComplete="email"
-          aria-invalid={Boolean(errors.email)}
-          aria-describedby={errors.email ? "resend-email-error" : undefined}
-          {...register("email")}
-        />
-        {errors.email && (
-          <p id="resend-email-error" role="alert" className="text-sm text-red-700">
-            {errors.email.message}
-          </p>
-        )}
-      </div>
-      {status === "error" && <p role="alert" className="text-sm text-red-700">{message}</p>}
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? "Requesting…" : "Send new verification link"}
+    <form onSubmit={handleSubmit(submit)} noValidate className="space-y-5" aria-busy={isSubmitting}>
+      <Field id="resend-email" label="Email address" error={errors.email}>
+        <Input id="resend-email" type="email" autoComplete="email" placeholder="you@company.com"
+          aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "resend-email-error" : undefined}
+          {...register("email")} />
+      </Field>
+      {status === "error" && <InlineAlert tone="error">{message}</InlineAlert>}
+      <Button type="submit" disabled={isSubmitting} className="w-full py-3">
+        {isSubmitting ? <><LoaderCircle size={18} className="animate-spin motion-reduce:animate-none" aria-hidden="true" /> Requesting…</> : <>Send new verification link <ArrowRight size={17} aria-hidden="true" /></>}
       </Button>
     </form>
   );

@@ -1,5 +1,7 @@
 import { Suspense } from "react";
-import { VerifyEmailForm } from "../../../features/auth/components/verify-email-form.jsx";
+import { AuthCard } from "@/components/auth/auth-card";
+import { VerifyEmailForm } from "@/features/auth/components/verify-email-form";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata = {
   title: "Verify email | ForgeFlow",
@@ -9,17 +11,10 @@ export const metadata = {
 
 export default function VerifyEmailPage() {
   return (
-    <main className="min-h-screen bg-[var(--ff-bg)] px-4 py-12 text-[var(--ff-text)]">
-      <div className="mx-auto w-full max-w-md rounded-xl border border-[var(--ff-border)] bg-[var(--ff-surface)] p-6 shadow-sm sm:p-8">
-        <div className="mb-6 h-1 w-14 rounded-full bg-[var(--ff-primary)]" />
-        <h1 className="text-2xl font-semibold">Verify your email</h1>
-        <p className="mt-2 mb-6 text-sm text-[var(--ff-muted)]">
-          Confirm that you can access this inbox. Your verification link is valid for 12 hours.
-        </p>
-        <Suspense fallback={<p role="status">Preparing verification…</p>}>
-          <VerifyEmailForm />
-        </Suspense>
-      </div>
-    </main>
+    <AuthCard eyebrow="ONE QUICK CHECK" title="Verify your email." description="Confirm that you can access your inbox. For security, the link is only used when you press the button below.">
+      <Suspense fallback={<div role="status" aria-label="Preparing verification" className="space-y-5"><Skeleton className="h-5 w-4/5" /><Skeleton className="h-12 w-full" /></div>}>
+        <VerifyEmailForm />
+      </Suspense>
+    </AuthCard>
   );
 }
