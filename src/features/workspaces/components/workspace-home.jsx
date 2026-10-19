@@ -433,7 +433,7 @@ function WorkspaceHomeContent({ user, signOutAction, workspaceId }) {
                 selectedWorkspace && <RoleChip role={selectedWorkspace.role} />
               }
               title={selectedWorkspace?.name || 'Workspace'}
-              description="Manage this workspace’s identity. Projects, issues, and member invites are coming next."
+              description="Organize delivery projects, invite teammates and manage workspace access."
             />
 
             {selected.isPending ? (
@@ -459,7 +459,7 @@ function WorkspaceHomeContent({ user, signOutAction, workspaceId }) {
                   </h2>
                   <p className="mt-3 text-[14px] leading-[1.6] text-[var(--ff-muted)]">
                     Your access level is <strong className="font-semibold text-[var(--ff-text-strong)]">{selectedWorkspace.role}</strong>.
-                    Projects, issues, and member management will be added in upcoming milestones.
+                    Projects and team invitations are now available for this workspace. Issues and Kanban come next.
                   </p>
                   <div className="mt-6 grid grid-cols-2 gap-3">
                     <div className="rounded-[12px] border border-[var(--ff-border-faint)] bg-[var(--ff-surface-2)] p-4">
@@ -480,6 +480,8 @@ function WorkspaceHomeContent({ user, signOutAction, workspaceId }) {
                     </div>
                   </div>
                   <div className="mt-7 flex flex-wrap gap-2">
+                    <Link href={`/w/${selectedWorkspace.id}/projects`}><Button size="md">Projects →</Button></Link>
+                    <Link href={`/w/${selectedWorkspace.id}/settings/members`}><Button size="md" variant="secondary">Members & invites</Button></Link>
                     <Link href="/dashboard">
                       <Button variant="secondary" size="md">
                         <ArrowRight size={14} className="rotate-180" aria-hidden="true" />
