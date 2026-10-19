@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, LoaderCircle } from "lucide-react";
+import { ArrowRight, LoaderCircle, Mail, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -55,23 +55,80 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit(submit)} noValidate className="space-y-5" aria-busy={isSubmitting}>
       <Field id="login-email" label="Email address" error={errors.email}>
-        <Input id="login-email" type="email" placeholder="you@company.com" autoComplete="email"
-          aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "login-email-error" : undefined}
-          {...register("email")} />
+        <div className="relative">
+          <Mail
+            size={15}
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[var(--ff-muted-soft)]"
+          />
+          <Input
+            id="login-email"
+            type="email"
+            placeholder="you@company.com"
+            autoComplete="email"
+            className="pl-10"
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? "login-email-error" : undefined}
+            {...register("email")}
+          />
+        </div>
       </Field>
       <Field id="login-password" label="Password" error={errors.password}>
-        <PasswordField id="login-password" autoComplete="current-password" placeholder="Enter your password"
-          aria-invalid={Boolean(errors.password)} aria-describedby={errors.password ? "login-password-error" : undefined}
-          {...register("password")} />
+        <div className="relative">
+          <Lock
+            size={15}
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[var(--ff-muted-soft)]"
+          />
+          <PasswordField
+            id="login-password"
+            autoComplete="current-password"
+            placeholder="Enter your password"
+            className="pl-10"
+            aria-invalid={Boolean(errors.password)}
+            aria-describedby={errors.password ? "login-password-error" : undefined}
+            {...register("password")}
+          />
+        </div>
       </Field>
       {serverError && <InlineAlert tone="error">{serverError}</InlineAlert>}
-      {needsVerification && <Link href="/resend-verification" className="ff-text-link inline-flex min-h-11 items-center text-sm font-semibold">Request a new verification link</Link>}
-      <Button type="submit" disabled={isSubmitting} className="mt-2 w-full py-3">
-        {isSubmitting ? <><LoaderCircle size={18} className="animate-spin motion-reduce:animate-none" aria-hidden="true" /> Signing in…</> : <>Sign in <ArrowRight size={17} aria-hidden="true" /></>}
+      {needsVerification && (
+        <Link
+          href="/resend-verification"
+          className="ff-text-link inline-flex min-h-11 items-center text-[12.5px] font-semibold"
+        >
+          Request a new verification link
+        </Link>
+      )}
+      <Button type="submit" disabled={isSubmitting} className="mt-2 w-full" size="lg">
+        {isSubmitting ? (
+          <>
+            <LoaderCircle size={17} className="animate-spin motion-reduce:animate-none" aria-hidden="true" />
+            Signing in…
+          </>
+        ) : (
+          <>
+            Sign in
+            <ArrowRight size={16} aria-hidden="true" />
+          </>
+        )}
       </Button>
-      <p className="border-t border-[var(--ff-border)] pt-6 text-center text-sm text-[var(--ff-muted)]">
-        New to ForgeFlow? <Link href="/register" className="ff-text-link font-semibold">Create an account</Link>
-      </p>
+      <div className="relative my-1">
+        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+          <div className="w-full border-t border-[var(--ff-border-faint)]" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-[var(--ff-surface)] px-3 text-[10.5px] font-semibold tracking-[0.14em] text-[var(--ff-muted-soft)] uppercase">
+            New to ForgeFlow?
+          </span>
+        </div>
+      </div>
+      <Link
+        href="/register"
+        className="flex h-12 w-full items-center justify-center rounded-[12px] border border-[var(--ff-border)] bg-[var(--ff-surface)] text-[14px] font-semibold text-[var(--ff-text)] shadow-[var(--ff-shadow-xs)] transition-colors hover:border-[var(--ff-border-strong)] hover:bg-[var(--ff-surface-2)] hover:text-[var(--ff-text-strong)]"
+      >
+        Create your account
+      </Link>
     </form>
   );
 }

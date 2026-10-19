@@ -35,7 +35,7 @@ function Sidebar({ onNavigate }) {
         })}
       </nav>
       <div className="mt-auto space-y-3 border-t border-slate-700 pt-5">
-        <p className="px-3 text-xs leading-5 text-slate-400">Static UI preview — no login or live data yet.</p>
+        <p className="px-3 text-xs leading-5 text-slate-400">Static UI preview. No login or live data yet.</p>
         <Link href="/" className="flex items-center gap-2 px-3 text-sm text-slate-300 hover:text-white" onClick={onNavigate}>
           <ArrowLeft size={17} aria-hidden="true" /> Public site
         </Link>

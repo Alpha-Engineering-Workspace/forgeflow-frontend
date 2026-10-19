@@ -100,7 +100,7 @@ export default function Home() {
       </section>
 
       <footer className="border-t border-[var(--ff-border)] px-6 py-8 text-center text-sm text-[var(--ff-muted)]">
-        ForgeFlow — Built for connected work.
+        ForgeFlow · Built for connected work.
       </footer>
     </main>
   );
