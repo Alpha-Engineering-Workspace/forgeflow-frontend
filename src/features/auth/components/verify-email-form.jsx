@@ -3,7 +3,9 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "../../../components/ui/button.jsx";
+import { ArrowRight, LoaderCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { InlineAlert } from "@/components/ui/inline-alert";
 
 const TOKEN_FORMAT = /^[A-Za-z0-9_-]{30,200}$/;
 
@@ -19,28 +21,24 @@ export function VerifyEmailForm() {
     setState("pending");
     setMessage("");
     try {
+      // GET only displays the page; consuming the secret requires explicit POST.
       const response = await fetch("/api/backend/auth/email/verify", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ token }),
-        cache: "no-store",
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ token }), cache: "no-store",
       });
       if (response.status === 204) {
         setState("success");
         setMessage("Your email has been verified. You can now sign in.");
-        // Remove the single-use credential from the address bar after success.
         window.history.replaceState(window.history.state, "", "/verify-email");
         return;
       }
       const body = await response.json().catch(() => null);
       setState("failed");
-      if (response.status === 400) {
-        setMessage("This link is invalid, expired, or already used. Request a new verification email.");
-      } else if (response.status === 429) {
-        setMessage("Too many attempts. Please wait and try again.");
-      } else {
-        setMessage(body?.error?.message || "Email verification is temporarily unavailable. Try again.");
-      }
+      setMessage(response.status === 400
+        ? "This link is invalid, expired, or already used. Request a new verification email."
+        : response.status === 429
+          ? "Too many attempts. Please wait and try again."
+          : body?.error?.message || "Email verification is temporarily unavailable. Try again.");
     } catch {
       setState("failed");
       setMessage("Could not connect. Please try again.");
@@ -49,32 +47,22 @@ export function VerifyEmailForm() {
 
   if (!validLink) {
     return (
-      <div className="space-y-3">
-        <p role="alert" className="text-sm text-red-700">Verification link is missing or invalid.</p>
-        <Link href="/resend-verification" className="inline-block text-sm text-[var(--ff-link,#1D4ED8)] underline">Request a new verification email</Link>
+      <div className="space-y-5">
+        <InlineAlert tone="error">Verification link is missing or invalid.</InlineAlert>
+        <Link href="/resend-verification" className="ff-text-link inline-flex min-h-11 items-center font-semibold text-sm">Request a new verification email <ArrowRight size={16} className="ml-2" aria-hidden="true" /></Link>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <p className="text-sm text-[var(--ff-muted)]">
-        To protect your account, verification only happens when you confirm below.
-      </p>
-      {message && (
-        <p role={state === "success" ? "status" : "alert"} className={state === "success" ? "text-sm text-green-700" : "text-sm text-red-700"}>
-          {message}
-        </p>
-      )}
-      {state === "success" && (
-        <Link href="/login" className="inline-block text-sm text-[var(--ff-link,#1D4ED8)] underline">Go to sign in</Link>
-      )}
-      {state === "failed" && (
-        <Link href="/resend-verification" className="inline-block text-sm text-[var(--ff-link,#1D4ED8)] underline">Request a new verification email</Link>
-      )}
+    <div className="space-y-5">
+      {state === "idle" && <InlineAlert>Verification only happens after you confirm below. Opening a link alone will not use it.</InlineAlert>}
+      {message && <InlineAlert tone={state === "success" ? "success" : "error"}>{message}</InlineAlert>}
+      {state === "success" && <Link href="/login" className="ff-text-link inline-flex min-h-11 items-center font-semibold text-sm">Go to sign in <ArrowRight size={16} className="ml-2" aria-hidden="true" /></Link>}
+      {state === "failed" && <Link href="/resend-verification" className="ff-text-link inline-flex min-h-11 items-center font-semibold text-sm">Request a new verification email <ArrowRight size={16} className="ml-2" aria-hidden="true" /></Link>}
       {state !== "success" && (
-        <Button type="button" onClick={verify} disabled={state === "pending"} className="w-full">
-          {state === "pending" ? "Verifying…" : "Verify my email"}
+        <Button type="button" onClick={verify} disabled={state === "pending"} className="w-full py-3">
+          {state === "pending" ? <><LoaderCircle size={18} className="animate-spin motion-reduce:animate-none" aria-hidden="true" /> Verifying…</> : <>Verify my email <ArrowRight size={17} aria-hidden="true" /></>}
         </Button>
       )}
     </div>

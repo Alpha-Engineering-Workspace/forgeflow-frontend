@@ -6,11 +6,7 @@ const variants = {
 
 export function Button({ children, className = "", variant = "primary", type = "button", ...props }) {
   return (
-    <button
-      type={type}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant] ?? variants.primary} ${className}`}
-      {...props}
-    >
+    <button type={type} className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant] ?? variants.primary} ${className}`} {...props}>
       {children}
     </button>
   );

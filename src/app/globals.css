@@ -47,10 +47,6 @@
   --ff-focus: #93C5FD;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   min-height: 100vh;
   background: var(--ff-bg);
@@ -93,3 +89,39 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+/* Milestone 4: shared semantic surfaces. The original brand tokens above stay intact. */
+:root {
+  --ff-control-border: #A4B2C6;
+  --ff-placeholder: #63748C;
+  --ff-link: #1D4ED8;
+  --ff-danger-text: #991B1B;
+  --ff-success-text: #166534;
+}
+
+[data-theme="dark"] {
+  --ff-control-border: #536580;
+  --ff-placeholder: #B6C4D8;
+  --ff-link: #93C5FD;
+  --ff-danger-text: #FCA5A5;
+  --ff-success-text: #86EFAC;
+}
+
+/* Route transitions should not trigger document-wide smooth scrolling. */
+html { scroll-behavior: auto; }
+.ff-input:focus-visible { border-color: var(--ff-primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, .13); }
+.ff-input[aria-invalid="true"] { border-color: #DC2626; }
+.ff-eyebrow { color: var(--ff-primary); font-size: .7rem; font-weight: 800; letter-spacing: .16em; }
+.ff-text-link { color: var(--ff-link); text-underline-offset: 4px; }
+.ff-text-link:hover { text-decoration: underline; }
+.ff-alert-error { color: #991B1B; border-color: #FECACA; background: #FEF2F2; }
+.ff-alert-success { color: #166534; border-color: #BBF7D0; background: #F0FDF4; }
+.ff-alert-info { color: #1D4ED8; border-color: #BFDBFE; background: #EFF6FF; }
+.ff-auth-story { isolation: isolate; }
+.ff-auth-geometry { z-index: -1; opacity: .6; background: radial-gradient(circle at 95% 40%, rgba(6, 182, 212, .10) 0, transparent 37%), linear-gradient(145deg, transparent 50%, rgba(37, 99, 235, .1) 51%, transparent 58%); }
+.ff-auth-geometry::after { content: ""; position: absolute; width: 75%; aspect-ratio: 1; right: -30%; top: 7%; border: 1px solid rgba(125, 211, 252, .15); transform: rotate(-25deg); border-radius: 22%; }
+.ff-brand-mark { position: relative; display: grid; gap: 4px; width: 30px; transform: skewY(-14deg); }
+.ff-brand-mark span { display: block; width: 29px; height: 9px; background: #2563EB; border-radius: 3px 7px 3px 3px; }
+.ff-brand-mark span + span { width: 21px; background: #06B6D4; }
+.ff-skeleton { animation: ff-skeleton-pulse 1.6s ease-in-out infinite; }
+@keyframes ff-skeleton-pulse { 0%,100% { opacity: .6; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .ff-skeleton { animation: none; } }

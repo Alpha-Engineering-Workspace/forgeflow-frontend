@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ArrowRight, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../../../components/ui/button.jsx";
-import { Input } from "../../../components/ui/input.jsx";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Field } from "@/components/ui/field";
+import { PasswordField } from "@/components/ui/password-field";
+import { InlineAlert } from "@/components/ui/inline-alert";
 import { loginSchema } from "../login-schema.js";
 
 function loginError(result) {
@@ -30,6 +34,7 @@ export function LoginForm() {
     setServerError("");
     setNeedsVerification(false);
     try {
+      // Keep M3's Auth.js sign-in path. Backend tokens never enter component state.
       const result = await signIn("credentials", {
         ...values,
         redirect: false,
@@ -48,24 +53,24 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(submit)} noValidate className="space-y-5">
-      <div className="space-y-1.5">
-        <label htmlFor="login-email" className="block text-sm font-medium">Email address</label>
-        <Input id="login-email" type="email" autoComplete="email" aria-invalid={Boolean(errors.email)} {...register("email")} />
-        {errors.email && <p role="alert" className="text-sm text-red-700">{errors.email.message}</p>}
-      </div>
-      <div className="space-y-1.5">
-        <label htmlFor="login-password" className="block text-sm font-medium">Password</label>
-        <Input id="login-password" type="password" autoComplete="current-password" aria-invalid={Boolean(errors.password)} {...register("password")} />
-        {errors.password && <p role="alert" className="text-sm text-red-700">{errors.password.message}</p>}
-      </div>
-      {serverError && <p role="alert" className="text-sm text-red-700">{serverError}</p>}
-      {needsVerification && <Link href="/resend-verification" className="text-sm underline">Request a new verification link</Link>}
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? "Signing in…" : "Sign in"}
+    <form onSubmit={handleSubmit(submit)} noValidate className="space-y-5" aria-busy={isSubmitting}>
+      <Field id="login-email" label="Email address" error={errors.email}>
+        <Input id="login-email" type="email" placeholder="you@company.com" autoComplete="email"
+          aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "login-email-error" : undefined}
+          {...register("email")} />
+      </Field>
+      <Field id="login-password" label="Password" error={errors.password}>
+        <PasswordField id="login-password" autoComplete="current-password" placeholder="Enter your password"
+          aria-invalid={Boolean(errors.password)} aria-describedby={errors.password ? "login-password-error" : undefined}
+          {...register("password")} />
+      </Field>
+      {serverError && <InlineAlert tone="error">{serverError}</InlineAlert>}
+      {needsVerification && <Link href="/resend-verification" className="ff-text-link inline-flex min-h-11 items-center text-sm font-semibold">Request a new verification link</Link>}
+      <Button type="submit" disabled={isSubmitting} className="mt-2 w-full py-3">
+        {isSubmitting ? <><LoaderCircle size={18} className="animate-spin motion-reduce:animate-none" aria-hidden="true" /> Signing in…</> : <>Sign in <ArrowRight size={17} aria-hidden="true" /></>}
       </Button>
-      <p className="text-center text-sm text-[var(--ff-muted)]">
-        New to ForgeFlow? <Link href="/register" className="underline">Create an account</Link>
+      <p className="border-t border-[var(--ff-border)] pt-6 text-center text-sm text-[var(--ff-muted)]">
+        New to ForgeFlow? <Link href="/register" className="ff-text-link font-semibold">Create an account</Link>
       </p>
     </form>
   );
