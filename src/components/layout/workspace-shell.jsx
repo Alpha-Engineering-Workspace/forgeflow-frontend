@@ -19,18 +19,23 @@ function Brand() {
   );
 }
 
-function SidebarContent({ onNavigate }) {
+function SidebarContent({ onNavigate, workspaces = [], selectedWorkspace }) {
   return (
     <div className="flex h-full flex-col px-5 py-6 text-slate-100">
       <Brand />
       <div className="mt-10 rounded-xl border border-white/10 bg-white/5 px-3.5 py-3.5" aria-label="Workspace status">
         <p className="text-[10px] font-bold tracking-[.15em] text-slate-400 uppercase">Current workspace</p>
-        <p className="mt-2 text-sm font-semibold">No workspace yet</p>
-        <p className="mt-1 text-xs leading-5 text-slate-400">Workspace setup comes next.</p>
+        <p className="mt-2 truncate text-sm font-semibold">{selectedWorkspace?.name || (workspaces.length ? 'Choose a workspace' : 'No workspace yet')}</p>
+        <p className="mt-1 text-xs leading-5 text-slate-400">{selectedWorkspace ? `${selectedWorkspace.role} access` : 'Your private team spaces'}</p>
+        {workspaces.length > 0 && <div className="mt-3 space-y-1 border-t border-white/10 pt-2">
+          {workspaces.map((space) => <Link key={space.id} href={`/w/${space.id}`} onClick={onNavigate}
+            aria-current={selectedWorkspace?.id === space.id ? 'page' : undefined}
+            className={`block min-h-10 truncate rounded-lg px-2 py-2.5 text-xs hover:bg-white/10 ${selectedWorkspace?.id === space.id ? 'bg-white/15 text-white' : 'text-slate-300'}`}>{space.name}</Link>)}
+        </div>}
       </div>
       <nav className="mt-9 space-y-1" aria-label="Main navigation">
         <p className="mb-3 px-3 text-[10px] font-bold tracking-[.18em] text-slate-500 uppercase">Workspace</p>
-        <Link href="/dashboard" onClick={onNavigate} aria-current="page" className="flex min-h-11 items-center gap-3 rounded-lg bg-blue-600 px-3 text-sm font-semibold text-white">
+        <Link href="/dashboard" onClick={onNavigate} aria-current={!selectedWorkspace ? 'page' : undefined} className={`flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-semibold text-white ${!selectedWorkspace ? 'bg-blue-600' : 'hover:bg-white/10'}`}>
           <LayoutGrid size={18} aria-hidden="true" /> Overview
         </Link>
         {futureNavigation.map(({ label, icon: Icon }) => (
@@ -96,7 +101,7 @@ function AccountMenu({ user, signOutAction }) {
   );
 }
 
-export function WorkspaceShell({ user, signOutAction, children }) {
+export function WorkspaceShell({ user, signOutAction, children, workspaces = [], selectedWorkspace = null }) {
   const drawerRef = useRef(null);
   const openButtonRef = useRef(null);
   function closeDrawer() { if (drawerRef.current?.open) drawerRef.current.close(); }
@@ -104,7 +109,7 @@ export function WorkspaceShell({ user, signOutAction, children }) {
   return (
     <div className="min-h-dvh bg-[var(--ff-bg)] text-[var(--ff-text)] lg:pl-[232px]">
       <aside className="fixed inset-y-0 left-0 hidden w-[232px] bg-[var(--ff-sidebar)] lg:block">
-        <SidebarContent />
+        <SidebarContent workspaces={workspaces} selectedWorkspace={selectedWorkspace} />
       </aside>
       <dialog
         ref={drawerRef}
@@ -115,19 +120,19 @@ export function WorkspaceShell({ user, signOutAction, children }) {
       >
         <div className="h-full w-full overflow-y-auto">
           <button type="button" aria-label="Close navigation" onClick={closeDrawer} className="absolute top-5 right-3 z-10 flex h-11 w-11 items-center justify-center rounded-lg text-slate-300 hover:bg-white/10"><X size={20} aria-hidden="true" /></button>
-          <SidebarContent onNavigate={closeDrawer} />
+          <SidebarContent onNavigate={closeDrawer} workspaces={workspaces} selectedWorkspace={selectedWorkspace} />
         </div>
       </dialog>
       <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between gap-3 border-b border-[var(--ff-border)] bg-[var(--ff-surface)] px-4 sm:px-7">
         <div className="flex min-w-0 items-center gap-3">
           <button type="button" ref={openButtonRef} onClick={() => drawerRef.current?.showModal()} aria-label="Open navigation" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[var(--ff-border)] lg:hidden"><Menu size={21} aria-hidden="true" /></button>
           <div className="min-w-0">
-            <p className="hidden text-[11px] font-medium text-[var(--ff-muted)] sm:block">Workspace / Overview</p>
-            <p className="truncate text-sm font-semibold">Overview</p>
+            <p className="hidden text-[11px] font-medium text-[var(--ff-muted)] sm:block">Workspace / {selectedWorkspace ? selectedWorkspace.name : "Overview"}</p>
+            <p className="truncate text-sm font-semibold">{selectedWorkspace?.name || "Overview"}</p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-          <span className="hidden items-center gap-1.5 text-xs text-[var(--ff-muted)] md:inline-flex"><CircleHelp size={15} aria-hidden="true" /> Workspace setup next</span>
+          <span className="hidden items-center gap-1.5 text-xs text-[var(--ff-muted)] md:inline-flex"><CircleHelp size={15} aria-hidden="true" /> Workspace access secured</span>
           <AccountMenu user={user} signOutAction={signOutAction} />
         </div>
       </header>
