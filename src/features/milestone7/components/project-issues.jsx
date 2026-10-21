@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { ListTodo, Plus, Search, ArrowLeft, ChevronRight } from 'lucide-react';
+import { ListTodo, Plus, Search, ArrowLeft, ChevronRight, LayoutGrid } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import QueryProvider from '@/providers/query-provider';
 import { WorkspaceShell } from '@/components/layout/workspace-shell';
@@ -47,8 +47,9 @@ function IssuesContent({ user, signOutAction, workspaceId, projectId }) {
     <main className="mx-auto w-full max-w-[var(--ff-container)] space-y-7 px-4 py-8 sm:px-7 lg:px-10 lg:py-12">
       <Link href={`/w/${workspaceId}/projects/${projectId}`} className="ff-text-link inline-flex min-h-10 items-center gap-2 text-[13px] font-semibold"><ArrowLeft size={15}/> Project detail</Link>
       <PageHeader eyebrow="Delivery · Issues" title={project.data?.project?.name ? `Issues · ${project.data.project.name}` : 'Project issues'}
-        description="Track work, assign teammates, and keep updates safe with version checks. Kanban drag-and-drop arrives in M8."
+        description="Track work, assign teammates, and keep updates safe with version checks."
         action={active ? <Button onClick={() => { create.reset(); setNotice(''); setCreating((value) => !value); }}><Plus size={16}/> New issue</Button> : null}/>
+      <Link href={`/w/${workspaceId}/projects/${projectId}/board`} className="ff-text-link inline-flex min-h-11 items-center gap-2 text-[13px] font-semibold"><LayoutGrid size={16}/> Open Kanban board →</Link>
       {workspace.isError || project.isError ? <InlineAlert tone="error">Project unavailable or you do not have access.</InlineAlert> : null}
       {project.isPending ? <Skeleton className="h-24 w-full"/> : null}
       {project.data && !active ? <InlineAlert tone="info">This project is archived. Issues are read-only.</InlineAlert> : null}
