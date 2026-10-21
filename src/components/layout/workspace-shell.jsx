@@ -26,7 +26,6 @@ const primaryNav = [
 ];
 
 const upcomingNav = [
-  { label: "Issues", icon: ListTodo },
   { label: "Board", icon: LayoutGrid },
 ];
 
@@ -95,6 +94,9 @@ function Sidebar({ onNavigate, workspaces = [], selectedWorkspace, user }) {
             <>
               <Link href={`/w/${selectedWorkspace.id}/projects`} onClick={onNavigate} className="ff-nav-item">
                 <FolderKanban size={16} aria-hidden="true"/><span className="flex-1">Projects</span>
+              </Link>
+              <Link href={`/w/${selectedWorkspace.id}/issues`} onClick={onNavigate} className="ff-nav-item">
+                <ListTodo size={16} aria-hidden="true"/><span className="flex-1">Issues</span>
               </Link>
               <Link href={`/w/${selectedWorkspace.id}/settings/members`} onClick={onNavigate} className="ff-nav-item">
                 <Settings2 size={16} aria-hidden="true"/><span className="flex-1">Members</span>
