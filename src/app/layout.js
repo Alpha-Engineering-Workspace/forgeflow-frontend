@@ -9,7 +9,7 @@ const inter = Inter({
 export const metadata = {
   title: "ForgeFlow | Work in Motion",
   description:
-    "A modern workspace for projects, collaboration, and client delivery.",
+    "Organize workspaces, manage project issues, and move delivery forward with persisted Kanban.",
 };
 
 export default function RootLayout({ children }) {

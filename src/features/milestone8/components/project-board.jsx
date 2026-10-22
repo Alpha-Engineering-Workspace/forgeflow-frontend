@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/ui/page-header';
 import { Button } from '@/components/ui/button';
 import { InlineAlert } from '@/components/ui/inline-alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { STATUSES, display, domainRequest, issuePath, mutationOptions } from '@/features/milestone7/components/issue-data';
 import { boardLanes, destinationIndex, isUnchangedMove, previewBoard } from './board-order';
 
@@ -18,8 +19,6 @@ const tones = {
   IN_REVIEW: { line: 'from-violet-600 to-fuchsia-400', chip: 'bg-violet-500/10 text-violet-700 dark:text-violet-300' },
   DONE: { line: 'from-emerald-600 to-teal-400', chip: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' },
 };
-const priorityStyle = { LOW: 'text-teal-700 dark:text-teal-300', MEDIUM: 'text-blue-700 dark:text-blue-300',
-  HIGH: 'text-amber-700 dark:text-amber-300', URGENT: 'text-rose-700 dark:text-rose-300' };
 const control = 'min-h-10 rounded-lg border border-[var(--ff-control-border)] bg-[var(--ff-surface)] px-2 text-[12px] text-[var(--ff-text)] focus-visible:outline-2 focus-visible:outline-[var(--ff-focus)]';
 
 function KanbanCard({ issue, lane, index, length, projectId, workspaceId, active, busy, onMove, onDropBefore, onDragStart, onDragEnd, onDragOver }) {
@@ -39,9 +38,9 @@ function KanbanCard({ issue, lane, index, length, projectId, workspaceId, active
       {active && <GripVertical size={16} className="mt-0.5 shrink-0 text-[var(--ff-muted)]" aria-hidden="true"/>}
     </div>
     <div className="mt-3 flex flex-wrap gap-2 text-[10.5px] font-semibold">
-      <span className={`rounded-full px-2.5 py-1 ${tones[lane].chip}`}>{display(lane)}</span>
-      <span className="rounded-full bg-[var(--ff-surface-2)] px-2.5 py-1 text-[var(--ff-muted)]">{display(issue.type)}</span>
-      <span className={`rounded-full bg-[var(--ff-surface-2)] px-2.5 py-1 ${priorityStyle[issue.priority]}`}>{display(issue.priority)}</span>
+      <SemanticBadge kind="status" value={lane}/>
+      <SemanticBadge kind="type" value={issue.type}/>
+      <SemanticBadge kind="priority" value={issue.priority}/>
     </div>
     <p className="mt-3 truncate text-[11px] text-[var(--ff-muted)]" title={issue.assigneeId ?? 'Unassigned'}>
       {issue.assigneeId ? `Assignee · ${issue.assigneeId.slice(0, 8)}…` : 'Unassigned'}

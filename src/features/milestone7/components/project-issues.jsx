@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { InlineAlert } from '@/components/ui/inline-alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { IssueForm } from './issue-form';
 import { STATUSES, PRIORITIES, TYPES, display, domainRequest, issuePath, mutationOptions } from './issue-data';
 
@@ -88,7 +89,7 @@ function IssuesContent({ user, signOutAction, workspaceId, projectId }) {
           {issues.data.issues.map(issue => <Link key={issue.id} href={`/w/${workspaceId}/projects/${projectId}/issues/${issue.id}`}
             className="ff-card group flex flex-col gap-3 rounded-[var(--ff-radius-panel)] border border-[var(--ff-border-faint)] bg-[var(--ff-surface)] p-5 shadow-[var(--ff-shadow-xs)] transition-colors hover:border-[var(--ff-primary)] sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0"><div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold text-[var(--ff-muted)]">
-              <span className="rounded-full bg-[var(--ff-primary-soft)] px-2.5 py-1 text-[var(--ff-primary)]">{display(issue.status)}</span><span>{display(issue.type)}</span><span>·</span><span>{display(issue.priority)} priority</span></div>
+              <SemanticBadge kind="status" value={issue.status}/><SemanticBadge kind="type" value={issue.type}/><SemanticBadge kind="priority" value={issue.priority}/></div>
               <h2 className="mt-2 break-words text-[16px] font-semibold text-[var(--ff-text-strong)]">{issue.title}</h2>
               <p className="mt-1 line-clamp-2 text-[12px] text-[var(--ff-muted)]">{issue.description || 'No description'} · {issue.assigneeId ? `Assigned to ${issue.assigneeId.slice(0, 8)}…` : 'Unassigned'}</p>
             </div><ChevronRight size={18} className="shrink-0 text-[var(--ff-muted)] group-hover:text-[var(--ff-primary)]"/>
