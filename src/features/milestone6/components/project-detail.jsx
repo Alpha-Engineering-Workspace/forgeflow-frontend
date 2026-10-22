@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import QueryProvider from '@/providers/query-provider';
 import { WorkspaceShell } from '@/components/layout/workspace-shell';
 import { PageHeader } from '@/components/ui/page-header';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { InlineAlert } from '@/components/ui/inline-alert';
 import { ListTodo, LayoutGrid } from 'lucide-react';
@@ -23,7 +24,8 @@ function Detail({user,signOutAction,workspaceId,projectId}) {
       <Link href={`/w/${workspaceId}/projects`} className="ff-text-link inline-flex min-h-10 items-center text-[13px] font-semibold">← Back to projects</Link>
       {workspace.isError||project.isError?<InlineAlert tone="error">Project not available for this workspace.</InlineAlert>:
         project.isPending?<Skeleton className="h-56 w-full"/>:
-        <><PageHeader eyebrow="Project detail" title={project.data.project.name} description={`Status: ${project.data.project.status} · Version ${project.data.project.version}`} />
+        <><PageHeader eyebrow="Project detail" title={project.data.project.name} description={`Version ${project.data.project.version}`} />
+          <SemanticBadge kind="project" value={project.data.project.status}/>
           <section className="ff-panel rounded-[var(--ff-radius-xl)] border border-[var(--ff-border-faint)] bg-[var(--ff-surface)] p-6 sm:p-8">
             <h2 className="text-[14px] font-semibold">Description</h2>
             <p className="mt-3 whitespace-pre-wrap break-words text-[14px] leading-7 text-[var(--ff-muted)]">{project.data.project.description||'No description provided.'}</p>

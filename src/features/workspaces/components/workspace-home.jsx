@@ -28,6 +28,8 @@ import { InlineAlert } from '@/components/ui/inline-alert';
 import { PageHeader } from '@/components/ui/page-header';
 import { Skeleton } from '@/components/ui/skeleton';
 import { workspaceSchema } from '../workspace-schema.js';
+import { WorkspaceInsights } from '@/features/milestone9/components/workspace-insights';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 async function api(path, options) {
   const response = await fetch(`/api/backend/workspaces${path}`, { cache: 'no-store', ...options });
@@ -71,18 +73,7 @@ function WorkspaceLoading() {
 }
 
 function RoleChip({ role }) {
-  const tones = {
-    OWNER: "bg-[var(--ff-primary-soft)] text-[var(--ff-primary)]",
-    ADMIN: "bg-[#FEF3C7] text-[#92400E]",
-    MEMBER: "bg-[var(--ff-surface-2)] text-[var(--ff-muted)]",
-  };
-  return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-bold tracking-wider uppercase ${tones[role] ?? tones.MEMBER}`}
-    >
-      {role}
-    </span>
-  );
+  return <SemanticBadge kind="role" value={role}/>;
 }
 
 function WorkspaceCard({ space }) {
@@ -450,6 +441,8 @@ function WorkspaceHomeContent({ user, signOutAction, workspaceId }) {
                 </Link>
               </div>
             ) : selectedWorkspace ? (
+              <div className="space-y-7">
+              <WorkspaceInsights workspaceId={selectedWorkspace.id}/>
               <div className="grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(320px,1fr)]">
                 {/* Identity card */}
                 <section className="ff-panel rounded-[var(--ff-radius-xl)] border border-[var(--ff-border-faint)] bg-[var(--ff-surface)] p-7 shadow-[var(--ff-shadow-xs)] sm:p-8">
@@ -459,7 +452,7 @@ function WorkspaceHomeContent({ user, signOutAction, workspaceId }) {
                   </h2>
                   <p className="mt-3 text-[14px] leading-[1.6] text-[var(--ff-muted)]">
                     Your access level is <strong className="font-semibold text-[var(--ff-text-strong)]">{selectedWorkspace.role}</strong>.
-                    Projects and team invitations are now available for this workspace. Issues and Kanban come next.
+                    Manage projects, issue tracking, and the persisted Kanban board within this workspace.
                   </p>
                   <div className="mt-6 grid grid-cols-2 gap-3">
                     <div className="rounded-[12px] border border-[var(--ff-border-faint)] bg-[var(--ff-surface-2)] p-4">
@@ -504,6 +497,7 @@ function WorkspaceHomeContent({ user, signOutAction, workspaceId }) {
                     </div>
                   )}
                 </section>
+              </div>
               </div>
             ) : null}
           </div>

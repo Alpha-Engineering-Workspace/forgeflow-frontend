@@ -2,36 +2,26 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   ArrowUpRight,
-  Bell,
-  Check,
   ChevronDown,
   ChevronsUpDown,
-  Command,
   FolderKanban,
   LayoutGrid,
   ListTodo,
   LogOut,
   Menu,
-  Plus,
-  Search,
   Settings2,
   X,
 } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 
-const primaryNav = [
-  { label: "Overview", href: "/dashboard", icon: LayoutGrid },
-];
-
-const upcomingNav = [
-  { label: "Board", icon: LayoutGrid },
-];
 
 function Sidebar({ onNavigate, workspaces = [], selectedWorkspace, user }) {
+  const pathname = usePathname();
   const isActiveWorkspace = (id) => selectedWorkspace?.id === id;
-  const isOnOverview = !selectedWorkspace;
+  const isOnOverview = pathname === "/dashboard";
 
   return (
     <div className="ff-rail flex h-full flex-col text-[var(--ff-on-dark)]">
@@ -41,20 +31,14 @@ function Sidebar({ onNavigate, workspaces = [], selectedWorkspace, user }) {
           <BrandMark size={28} />
           <span className="text-[15.5px] font-semibold tracking-[-0.025em] text-white">ForgeFlow</span>
         </Link>
-        <button
-          type="button"
-          aria-label="Collapse navigation"
-          className="hidden h-8 w-8 items-center justify-center rounded-md text-white/40 transition-colors hover:bg-white/5 hover:text-white lg:inline-flex"
-        >
-          <ChevronsUpDown size={15} aria-hidden="true" />
-        </button>
+
       </div>
 
       {/* Workspace switcher pill */}
       <div className="px-3 pt-4">
-        <div
-          className="flex cursor-pointer items-center gap-2.5 rounded-[10px] border border-[var(--ff-dark-border)] bg-white/[0.04] p-2.5 transition-colors hover:border-[var(--ff-dark-border-strong)] hover:bg-white/[0.06]"
-          aria-label="Switch workspace"
+        <Link href="/dashboard" onClick={onNavigate}
+          className="flex min-h-11 items-center gap-2.5 rounded-[10px] border border-[var(--ff-dark-border)] bg-white/[0.04] p-2.5 transition-colors hover:border-[var(--ff-dark-border-strong)] hover:bg-white/[0.06]"
+          aria-label="Choose a workspace"
         >
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-gradient-to-br from-[#3B82F6] to-[#06B6D4] text-[12px] font-bold text-white shadow-[0_4px_12px_-4px_rgba(59,130,246,0.6)]">
             {(selectedWorkspace?.name || user?.name || "F").trim().slice(0, 1).toUpperCase()}
@@ -68,7 +52,7 @@ function Sidebar({ onNavigate, workspaces = [], selectedWorkspace, user }) {
             </p>
           </div>
           <ChevronsUpDown size={14} className="shrink-0 text-white/40" aria-hidden="true" />
-        </div>
+        </Link>
       </div>
 
       {/* Primary nav */}
@@ -77,28 +61,26 @@ function Sidebar({ onNavigate, workspaces = [], selectedWorkspace, user }) {
           Workspace
         </p>
         <div className="space-y-0.5">
-          {primaryNav.map(({ label, href, icon: Icon }) => (
-            <Link
-              key={label}
-              href={href}
-              onClick={onNavigate}
-              data-active={isOnOverview}
-              aria-current={isOnOverview ? "page" : undefined}
-              className="ff-nav-item"
-            >
-              <Icon size={16} aria-hidden="true" />
-              <span className="flex-1">{label}</span>
-            </Link>
-          ))}
+          <Link href="/dashboard" onClick={onNavigate} data-active={isOnOverview}
+            aria-current={isOnOverview ? "page" : undefined} className="ff-nav-item">
+            <LayoutGrid size={16} aria-hidden="true"/><span className="flex-1">Workspaces</span>
+          </Link>
           {selectedWorkspace ? (
             <>
-              <Link href={`/w/${selectedWorkspace.id}/projects`} onClick={onNavigate} className="ff-nav-item">
+              <Link href={`/w/${selectedWorkspace.id}`} onClick={onNavigate} data-active={pathname === `/w/${selectedWorkspace.id}`}
+                aria-current={pathname === `/w/${selectedWorkspace.id}` ? "page" : undefined} className="ff-nav-item">
+                <LayoutGrid size={16} aria-hidden="true"/><span className="flex-1">Dashboard</span>
+              </Link>
+              <Link href={`/w/${selectedWorkspace.id}/projects`} onClick={onNavigate}
+                data-active={pathname.startsWith(`/w/${selectedWorkspace.id}/projects`)} className="ff-nav-item">
                 <FolderKanban size={16} aria-hidden="true"/><span className="flex-1">Projects</span>
               </Link>
-              <Link href={`/w/${selectedWorkspace.id}/issues`} onClick={onNavigate} className="ff-nav-item">
+              <Link href={`/w/${selectedWorkspace.id}/issues`} onClick={onNavigate}
+                data-active={pathname.startsWith(`/w/${selectedWorkspace.id}/issues`)} className="ff-nav-item">
                 <ListTodo size={16} aria-hidden="true"/><span className="flex-1">Issues</span>
               </Link>
-              <Link href={`/w/${selectedWorkspace.id}/settings/members`} onClick={onNavigate} className="ff-nav-item">
+              <Link href={`/w/${selectedWorkspace.id}/settings/members`} onClick={onNavigate}
+                data-active={pathname.startsWith(`/w/${selectedWorkspace.id}/settings`)} className="ff-nav-item">
                 <Settings2 size={16} aria-hidden="true"/><span className="flex-1">Members</span>
               </Link>
             </>
@@ -106,17 +88,6 @@ function Sidebar({ onNavigate, workspaces = [], selectedWorkspace, user }) {
             <FolderKanban size={16} aria-hidden="true"/><span className="flex-1">Projects</span>
             <span className="ff-pill-soft">Select space</span>
           </div>}
-          {upcomingNav.map(({ label, icon: Icon }) => (
-            <div
-              key={label}
-              aria-disabled="true"
-              className="ff-nav-item cursor-not-allowed opacity-50"
-            >
-              <Icon size={16} aria-hidden="true" />
-              <span className="flex-1">{label}</span>
-              <span className="ff-pill-soft">Soon</span>
-            </div>
-          ))}
         </div>
       </nav>
 
@@ -162,11 +133,6 @@ function Sidebar({ onNavigate, workspaces = [], selectedWorkspace, user }) {
 
       <div className="mt-auto px-3 pb-4">
         <div className="mb-3 h-px bg-white/5" />
-        <div className="ff-nav-item cursor-not-allowed opacity-50" aria-disabled="true">
-          <Settings2 size={16} aria-hidden="true" />
-          <span className="flex-1">Settings</span>
-          <span className="ff-pill-soft">Soon</span>
-        </div>
         <Link
           href="/"
           onClick={onNavigate}
@@ -177,7 +143,7 @@ function Sidebar({ onNavigate, workspaces = [], selectedWorkspace, user }) {
         </Link>
         <div className="mt-3 flex items-center gap-2 px-2 pt-2 text-[10.5px] tracking-wide text-white/30">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]" aria-hidden="true" />
-          <span>ForgeFlow · v1.0 beta</span>
+          <span>ForgeFlow · project operations</span>
         </div>
       </div>
     </div>
@@ -199,19 +165,10 @@ function Topbar({ user, signOutAction, selectedWorkspace, onOpenDrawer }) {
           <Menu size={19} aria-hidden="true" />
         </button>
 
-        {/* Command bar (decorative — placeholder for future global search) */}
-        <button
-          type="button"
-          aria-label="Search ForgeFlow"
-          className="hidden h-10 min-w-[280px] items-center gap-2.5 rounded-[10px] border border-[var(--ff-border-faint)] bg-[var(--ff-surface-2)] px-3 text-left text-[12.5px] text-[var(--ff-muted)] transition-colors hover:border-[var(--ff-border)] hover:bg-[var(--ff-surface)] sm:inline-flex"
-        >
-          <Search size={14} aria-hidden="true" />
-          <span className="flex-1">Search workspaces, projects, people…</span>
-          <span className="ml-auto inline-flex items-center gap-0.5 rounded border border-[var(--ff-border-faint)] bg-[var(--ff-surface)] px-1.5 py-0.5 text-[10.5px] font-semibold tracking-wide text-[var(--ff-muted)]">
-            <Command size={10} aria-hidden="true" /> K
-          </span>
-        </button>
-
+        <div className="hidden min-w-0 sm:block">
+          <p className="text-[11px] uppercase tracking-[.14em] text-[var(--ff-muted)]">Workspace operations</p>
+          <p className="truncate text-[14px] font-semibold text-[var(--ff-text-strong)]">{selectedWorkspace?.name || "Your workspaces"}</p>
+        </div>
         {/* Mobile breadcrumb */}
         <div className="min-w-0 sm:hidden">
           <p className="truncate text-[14px] font-semibold tracking-[-0.01em] text-[var(--ff-text-strong)]">
@@ -221,14 +178,6 @@ function Topbar({ user, signOutAction, selectedWorkspace, onOpenDrawer }) {
       </div>
 
       <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-        <button
-          type="button"
-          aria-label="Notifications"
-          className="relative inline-flex h-10 w-10 items-center justify-center rounded-[10px] text-[var(--ff-muted)] transition-colors hover:bg-[var(--ff-surface-2)] hover:text-[var(--ff-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ff-focus)]"
-        >
-          <Bell size={16} aria-hidden="true" />
-          <span className="absolute top-2.5 right-2.5 inline-block h-1.5 w-1.5 rounded-full bg-[var(--ff-primary)] shadow-[0_0_6px_rgba(37,99,235,0.6)]" aria-hidden="true" />
-        </button>
         <AccountMenu user={user} signOutAction={signOutAction} />
       </div>
     </header>
@@ -305,7 +254,7 @@ export function WorkspaceShell({ user, signOutAction, children, workspaces = [],
   }
 
   return (
-    <div className="min-h-dvh bg-[var(--ff-bg)] text-[var(--ff-text)]">
+    <div data-theme="dark" className="min-h-dvh bg-[var(--ff-bg)] text-[var(--ff-text)]">
       <aside className="ff-rail fixed inset-y-0 left-0 hidden w-[var(--ff-sidebar-w)] lg:block">
         <Sidebar
           user={user}

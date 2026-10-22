@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { ArrowLeft, Archive, FolderKanban, Plus, Save } from 'lucide-react';
 import QueryProvider from '@/providers/query-provider';
 import { WorkspaceShell } from '@/components/layout/workspace-shell';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { PageHeader } from '@/components/ui/page-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -102,7 +103,7 @@ function ProjectsContent({user,signOutAction,workspaceId}) {
         </div>:<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {projects.data.projects.map(p=><article key={p.id} className="ff-card rounded-[var(--ff-radius-panel)] border border-[var(--ff-border-faint)] bg-[var(--ff-surface)] p-5 shadow-[var(--ff-shadow-xs)]">
             <div className="flex items-start justify-between gap-3"><span className="rounded-lg bg-[var(--ff-primary-soft)] p-2.5 text-[var(--ff-primary)]"><FolderKanban size={19}/></span>
-              <span className="text-[11px] font-semibold text-[var(--ff-muted)]">{p.status}</span></div>
+              <SemanticBadge kind="project" value={p.status}/></div>
             <h2 className="mt-4 break-words text-[17px] font-semibold tracking-tight">{p.name}</h2>
             <p className="mt-2 line-clamp-3 min-h-10 text-[13px] leading-5 text-[var(--ff-muted)]">{p.description||'No description yet.'}</p>
             <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-[var(--ff-border-faint)] pt-4">

@@ -573,3 +573,38 @@ a, button, [role="button"] {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* M9 — central semantic status / priority / type color tokens; text always present. */
+.ff-semantic-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 24px; border: 1px solid rgba(255,255,255,.14);
+  border-radius: 999px; padding: 3px 10px; font-size: 11px;
+  font-weight: 700; line-height: 1.15; letter-spacing: .01em;
+  color: #fff; background: linear-gradient(115deg,#334155,#475569);
+  white-space: nowrap;
+}
+.ff-semantic-badge[data-kind="status"][data-value="IN_PROGRESS"],
+.ff-semantic-badge[data-kind="priority"][data-value="MEDIUM"] { background: linear-gradient(115deg,#1d4ed8,#0284c7); }
+.ff-semantic-badge[data-kind="status"][data-value="IN_REVIEW"],
+.ff-semantic-badge[data-kind="type"][data-value="FEATURE"] { background: linear-gradient(115deg,#6d28d9,#a855f7); }
+.ff-semantic-badge[data-kind="status"][data-value="DONE"],
+.ff-semantic-badge[data-kind="project"][data-value="ACTIVE"] { background: linear-gradient(115deg,#047857,#059669); }
+.ff-semantic-badge[data-kind="priority"][data-value="LOW"] { background: linear-gradient(115deg,#0f766e,#14b8a6); color: #041f1c; }
+.ff-semantic-badge[data-kind="priority"][data-value="HIGH"] { background: linear-gradient(115deg,#b45309,#fbbf24); color: #251400; }
+.ff-semantic-badge[data-kind="priority"][data-value="URGENT"] { background: linear-gradient(115deg,#be123c,#f43f5e); }
+.ff-semantic-badge[data-kind="type"][data-value="BUG"] { background: linear-gradient(115deg,#9d174d,#ec4899); }
+.ff-semantic-badge[data-kind="type"][data-value="TASK"] { background: linear-gradient(115deg,#334155,#64748b); }
+.ff-semantic-badge[data-kind="project"][data-value="ARCHIVED"],
+.ff-semantic-badge[data-kind="role"][data-value="MEMBER"] { background: linear-gradient(115deg,#334155,#64748b); }
+.ff-semantic-badge[data-kind="role"][data-value="OWNER"] { background: linear-gradient(115deg,#1e40af,#6366f1); }
+.ff-semantic-badge[data-kind="role"][data-value="ADMIN"] { background: linear-gradient(115deg,#6d28d9,#7c3aed); }
+.ff-semantic-badge[data-value="UNKNOWN"] { background: #334155; }
+
+.ff-m9-panel {
+  background: linear-gradient(135deg,rgba(18,28,51,.97),rgba(12,20,40,.97));
+  border: 1px solid #29344d; color: #f4f7ff;
+  border-radius: 20px; box-shadow: 0 14px 38px -26px rgba(1,9,28,.75);
+}
+.ff-m9-kpi { background: rgba(255,255,255,.035); border: 1px solid rgba(165,185,224,.16); border-radius: 14px; }
+.ff-m9-hero { background: radial-gradient(ellipse at 50% 120%,rgba(87,46,250,.44),transparent 66%),linear-gradient(160deg,#070b1c,#10133a 65%,#120c43); }
+@media (prefers-reduced-motion: reduce) { .ff-m9-hero * { scroll-behavior: auto !important; animation: none !important; } }

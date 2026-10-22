@@ -10,6 +10,7 @@ import { PageHeader } from '@/components/ui/page-header';
 import { Button } from '@/components/ui/button';
 import { InlineAlert } from '@/components/ui/inline-alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { IssueForm } from './issue-form';
 import { display, domainRequest, issuePath, mutationOptions } from './issue-data';
 
@@ -54,9 +55,9 @@ function Detail({ user, signOutAction, workspaceId, projectId, issueId }) {
             busy={update.isPending} error={update.error} onSave={(values) => update.mutate(values)} onCancel={() => setEditing(false)}/>
         </section> : <section className="ff-panel rounded-[var(--ff-radius-xl)] border border-[var(--ff-border-faint)] bg-[var(--ff-surface)] p-6 sm:p-8">
           <div className="grid gap-4 sm:grid-cols-2">
-            {[['Type', display(issue.data.issue.type)], ['Status', display(issue.data.issue.status)], ['Priority', display(issue.data.issue.priority)],
-              ['Assigned to', issue.data.issue.assigneeId || 'Unassigned']].map(([label, value]) =>
-              <div key={label}><p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ff-muted)]">{label}</p><p className="mt-1 break-all text-[13px] font-semibold">{value}</p></div>)}
+            {[['Type', 'type', issue.data.issue.type], ['Status', 'status', issue.data.issue.status], ['Priority', 'priority', issue.data.issue.priority]].map(([label, kind, value]) =>
+              <div key={label}><p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ff-muted)]">{label}</p><div className="mt-2"><SemanticBadge kind={kind} value={value}/></div></div>)}
+            <div><p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ff-muted)]">Assigned to</p><p className="mt-1 break-all text-[13px] font-semibold">{issue.data.issue.assigneeId || 'Unassigned'}</p></div>
           </div><div className="mt-6 border-t border-[var(--ff-border-faint)] pt-6"><h2 className="text-[14px] font-semibold">Description</h2>
             <p className="mt-3 whitespace-pre-wrap break-words text-[14px] leading-7 text-[var(--ff-muted)]">{issue.data.issue.description || 'No description provided.'}</p></div>
         </section>}
